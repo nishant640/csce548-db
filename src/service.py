@@ -15,8 +15,10 @@ HOSTING (example):
   uvicorn src.service:app --host 0.0.0.0 --port 8000
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional
 
 from src.business.business import (
     # users
@@ -30,6 +32,15 @@ from src.business.business import (
 )
 
 app = FastAPI(title="CSCE 548 Project 2 Services")
+
+# ---- CORS (needed for Project 3 frontend on port 5500) ----
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:5500", "http://localhost:5500"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ----------- Request Models -----------
 
@@ -56,8 +67,11 @@ class ScanIn(BaseModel):
 # ----------- USERS -----------
 
 @app.get("/users")
-def api_get_users():
-    return fetch_all_users()
+def api_get_users(limit: Optional[int] = Query(default=None, ge=1)):
+    rows = fetch_all_users()
+    if limit:
+        return rows[:limit]
+    return rows
 
 @app.get("/users/{user_id}")
 def api_get_user(user_id: int):
@@ -88,8 +102,11 @@ def api_delete_user(user_id: int):
 # ----------- SYSTEMS -----------
 
 @app.get("/systems")
-def api_get_systems():
-    return fetch_all_systems()
+def api_get_systems(limit: Optional[int] = Query(default=None, ge=1)):
+    rows = fetch_all_systems()
+    if limit:
+        return rows[:limit]
+    return rows
 
 @app.get("/systems/{system_id}")
 def api_get_system(system_id: int):
@@ -120,8 +137,11 @@ def api_delete_system(system_id: int):
 # ----------- VULNERABILITIES -----------
 
 @app.get("/vulnerabilities")
-def api_get_vulns():
-    return fetch_all_vulnerabilities()
+def api_get_vulns(limit: Optional[int] = Query(default=None, ge=1)):
+    rows = fetch_all_vulnerabilities()
+    if limit:
+        return rows[:limit]
+    return rows
 
 @app.get("/vulnerabilities/{vuln_id}")
 def api_get_vuln(vuln_id: int):
@@ -152,8 +172,11 @@ def api_delete_vuln(vuln_id: int):
 # ----------- SCANS -----------
 
 @app.get("/scans")
-def api_get_scans():
-    return fetch_all_scans()
+def api_get_scans(limit: Optional[int] = Query(default=None, ge=1)):
+    rows = fetch_all_scans()
+    if limit:
+        return rows[:limit]
+    return rows
 
 @app.get("/scans/{scan_id}")
 def api_get_scan(scan_id: int):
@@ -179,4 +202,4 @@ def api_delete_scan(scan_id: int):
     ok = remove_scan(scan_id)
     if not ok:
         raise HTTPException(status_code=404, detail="Scan not found")
-    return {"deleted": True}
+        return {"deleted": True}

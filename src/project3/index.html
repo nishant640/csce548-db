@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CSCE 548 Project 3 Client</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>Project 3 Client</h1>
+      <p class="muted">FastAPI client for Users, Systems, Vulnerabilities, Scans</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section class="card">
+      <h2>API</h2>
+
+      <div class="row">
+        <label for="baseUrl">Base URL</label>
+        <input id="baseUrl" type="text" value="http://127.0.0.1:8000" />
+      </div>
+
+      <div class="row buttons">
+        <button id="pingBtn" type="button">Ping</button>
+      </div>
+
+      <p id="status" class="muted small">Not pinged yet.</p>
+    </section>
+
+    <section class="card">
+      <h2>Quick GET Buttons</h2>
+      <p class="muted small">These prove the “get all / get one / get subset” requirement fast.</p>
+
+      <div class="grid">
+
+        <div class="mini">
+          <h3>Users</h3>
+          <button class="ghost" data-path="/users">GET all</button>
+          <button class="ghost" data-path="/users/1">GET one (id=1)</button>
+          <button class="ghost" data-path="/users?limit=2">GET subset (limit=2)</button>
+        </div>
+
+        <div class="mini">
+          <h3>Systems</h3>
+          <button class="ghost" data-path="/systems">GET all</button>
+          <button class="ghost" data-path="/systems/1">GET one (id=1)</button>
+          <button class="ghost" data-path="/systems?limit=2">GET subset (limit=2)</button>
+        </div>
+
+        <div class="mini">
+          <h3>Vulnerabilities</h3>
+          <button class="ghost" data-path="/vulnerabilities">GET all</button>
+          <button class="ghost" data-path="/vulnerabilities/1">GET one (id=1)</button>
+          <button class="ghost" data-path="/vulnerabilities?limit=2">GET subset (limit=2)</button>
+        </div>
+
+        <div class="mini">
+          <h3>Scans</h3>
+          <button class="ghost" data-path="/scans">GET all</button>
+          <button class="ghost" data-path="/scans/1">GET one (id=1)</button>
+          <button class="ghost" data-path="/scans?limit=2">GET subset (limit=2)</button>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Full Request Builder (CRUD)</h2>
+
+      <div class="row">
+        <label for="method">Method</label>
+        <select id="method">
+          <option>GET</option>
+          <option>POST</option>
+          <option>PUT</option>
+          <option>DELETE</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <label for="path">Path</label>
+        <input id="path" type="text" placeholder="/users" />
+      </div>
+
+      <div class="row">
+        <label for="body">JSON Body (POST/PUT)</label>
+        <textarea id="body" rows="7" placeholder='{"name":"Test","email":"test@test.com"}'></textarea>
+      </div>
+
+      <div class="row buttons">
+        <button id="sendBtn" type="button">Send</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Response</h2>
+      <pre id="output" class="output">{}</pre>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+  
+</body>
+</html>
