@@ -1,5 +1,5 @@
-function $(id){ 
-  return document.getElementById(id); 
+function $(id){
+  return document.getElementById(id);
 }
 
 const baseUrlEl = $("baseUrl");
@@ -21,8 +21,10 @@ function cleanBaseUrl(){
 function fullUrl(path){
   const base = cleanBaseUrl();
   const p = (path || "").trim();
+
   if(!base) return "";
   if(!p) return base;
+
   return p.startsWith("/") ? base + p : base + "/" + p;
 }
 
@@ -38,7 +40,7 @@ function escapeHtml(value){
 function showRaw(obj){
   try{
     outputEl.textContent = JSON.stringify(obj, null, 2);
-  }catch(e){
+  }catch(err){
     outputEl.textContent = String(obj);
   }
 }
@@ -53,25 +55,23 @@ function formatValue(value){
   return escapeHtml(value);
 }
 
-function renderObjectCard(obj, title = "Record"){
+function renderObjectTable(obj){
   let rows = "";
 
-  for(const key in obj){
+  Object.keys(obj).forEach(key => {
     rows += `
       <tr>
         <th>${escapeHtml(key)}</th>
         <td>${formatValue(obj[key])}</td>
       </tr>
     `;
-  }
+  });
 
   return `
     <div class="result-card">
-      <h3>${escapeHtml(title)}</h3>
+      <h3>Record Details</h3>
       <table class="result-table">
-        <tbody>
-          ${rows}
-        </tbody>
+        <tbody>${rows}</tbody>
       </table>
     </div>
   `;
@@ -79,7 +79,12 @@ function renderObjectCard(obj, title = "Record"){
 
 function renderArrayTable(arr){
   if(!arr.length){
-    return `<div class="result-card"><p>No records found.</p></div>`;
+    return `
+      <div class="result-card">
+        <h3>Results</h3>
+        <p class="result-message">No records were returned.</p>
+      </div>
+    `;
   }
 
   const keys = Array.from(
@@ -94,14 +99,15 @@ function renderArrayTable(arr){
   if(!keys.length){
     return `
       <div class="result-card">
-        <p>${escapeHtml(JSON.stringify(arr))}</p>
+        <h3>Results</h3>
+        <p class="result-message">${escapeHtml(JSON.stringify(arr))}</p>
       </div>
     `;
   }
 
-  const headerHtml = keys.map(key => `<th>${escapeHtml(key)}</th>`).join("");
+  const head = keys.map(key => `<th>${escapeHtml(key)}</th>`).join("");
 
-  const bodyHtml = arr.map(item => {
+  const body = arr.map(item => {
     const cells = keys.map(key => `<td>${formatValue(item[key])}</td>`).join("");
     return `<tr>${cells}</tr>`;
   }).join("");
@@ -111,10 +117,10 @@ function renderArrayTable(arr){
       <h3>Results (${arr.length} record${arr.length === 1 ? "" : "s"})</h3>
       <table class="result-table">
         <thead>
-          <tr>${headerHtml}</tr>
+          <tr>${head}</tr>
         </thead>
         <tbody>
-          ${bodyHtml}
+          ${body}
         </tbody>
       </table>
     </div>
@@ -123,40 +129,50 @@ function renderArrayTable(arr){
 
 function renderPrettyResponse(payload){
   if(!payload){
-    prettyOutputEl.innerHTML = `<p>No results yet.</p>`;
+    prettyOutputEl.innerHTML = `<div class="empty-state">No results yet.</div>`;
     return;
   }
 
   if(payload.error){
     prettyOutputEl.innerHTML = `
       <div class="result-card">
-        <p class="error">Error: ${escapeHtml(payload.error)}</p>
-        ${payload.detail ? `<p>${escapeHtml(payload.detail)}</p>` : ""}
+        <h3>Request Error</h3>
+        <p class="result-message error">${escapeHtml(payload.error)}</p>
+        ${payload.detail ? `<p class="result-message">${escapeHtml(payload.detail)}</p>` : ""}
       </div>
     `;
     return;
   }
 
-  const data = payload.data;
-
-  let content = `
-    <div class="result-card">
-      <h3>Request Summary</h3>
-      <p><strong>Method:</strong> ${escapeHtml(payload.method || "")}</p>
-      <p><strong>Status:</strong> ${escapeHtml(payload.status || "")}</p>
-      <p><strong>URL:</strong> ${escapeHtml(payload.url || "")}</p>
+  const summary = `
+    <div class="result-summary">
+      <div class="summary-box">
+        <div class="label">Method</div>
+        <div class="value">${escapeHtml(payload.method || "")}</div>
+      </div>
+      <div class="summary-box">
+        <div class="label">Status</div>
+        <div class="value">${escapeHtml(payload.status || "")}</div>
+      </div>
+      <div class="summary-box">
+        <div class="label">Path</div>
+        <div class="value">${escapeHtml(payload.path || "")}</div>
+      </div>
     </div>
   `;
+
+  let content = summary;
+  const data = payload.data;
 
   if(Array.isArray(data)){
     content += renderArrayTable(data);
   } else if(isPlainObject(data)){
-    content += renderObjectCard(data, "Record Details");
+    content += renderObjectTable(data);
   } else {
     content += `
       <div class="result-card">
         <h3>Result</h3>
-        <p>${formatValue(data)}</p>
+        <p class="result-message">${formatValue(data)}</p>
       </div>
     `;
   }
@@ -168,39 +184,42 @@ async function request(method, path, bodyObj){
   const url = fullUrl(path);
 
   if(!url){
-    const errorObj = { error: "Missing Base URL or Path" };
-    showRaw(errorObj);
-    renderPrettyResponse(errorObj);
+    const errObj = { error: "Missing Base URL or Path" };
+    showRaw(errObj);
+    renderPrettyResponse(errObj);
+    statusEl.innerHTML = `<span class="error">Missing Base URL or path.</span>`;
     return;
   }
 
-  const opts = {
+  const options = {
     method,
-    headers: { "Content-Type": "application/json" }
+    headers: {
+      "Content-Type": "application/json"
+    }
   };
 
   if(method === "POST" || method === "PUT"){
-    opts.body = JSON.stringify(bodyObj || {});
+    options.body = JSON.stringify(bodyObj || {});
   }
 
   outputEl.textContent = "Loading...";
-  prettyOutputEl.innerHTML = `<p>Loading...</p>`;
+  prettyOutputEl.innerHTML = `<div class="empty-state">Loading...</div>`;
 
   try{
-    const res = await fetch(url, opts);
-    const text = await res.text();
+    const response = await fetch(url, options);
+    const text = await response.text();
 
     let data = text;
     try{
       data = JSON.parse(text);
-    }catch(e){
-      // leave as text
+    }catch(err){
+      // keep text
     }
 
     const result = {
-      ok: res.ok,
-      status: res.status,
-      url,
+      ok: response.ok,
+      status: response.status,
+      path,
       method,
       data
     };
@@ -208,20 +227,19 @@ async function request(method, path, bodyObj){
     showRaw(result);
     renderPrettyResponse(result);
 
-    if(res.ok){
-      statusEl.innerHTML = `<span class="success">Request success ✅</span>`;
+    if(response.ok){
+      statusEl.innerHTML = `<span class="success">Request successful ✅</span>`;
     } else {
-      statusEl.innerHTML = `<span class="error">Request failed, but the server responded ⚠️</span>`;
+      statusEl.innerHTML = `<span class="error">Request failed, but the server responded.</span>`;
     }
   } catch(err){
-    const errorObj = {
+    const errObj = {
       error: "Network error",
-      detail: String(err),
-      url
+      detail: String(err)
     };
 
-    showRaw(errorObj);
-    renderPrettyResponse(errorObj);
+    showRaw(errObj);
+    renderPrettyResponse(errObj);
     statusEl.innerHTML = `<span class="error">Network error ❌ Check whether the API is running and whether CORS is enabled.</span>`;
   }
 }
@@ -241,13 +259,14 @@ sendBtn.addEventListener("click", async () => {
     if(raw){
       try{
         bodyObj = JSON.parse(raw);
-      }catch(e){
-        const errorObj = {
+      } catch(err){
+        const errObj = {
           error: "Body must be valid JSON",
-          detail: String(e)
+          detail: String(err)
         };
-        showRaw(errorObj);
-        renderPrettyResponse(errorObj);
+        showRaw(errObj);
+        renderPrettyResponse(errObj);
+        statusEl.innerHTML = `<span class="error">Body must be valid JSON.</span>`;
         return;
       }
     }
@@ -256,9 +275,9 @@ sendBtn.addEventListener("click", async () => {
   await request(method, path, bodyObj);
 });
 
-document.querySelectorAll("[data-path]").forEach(btn => {
-  btn.addEventListener("click", async () => {
-    const path = btn.getAttribute("data-path");
+document.querySelectorAll("[data-path]").forEach(button => {
+  button.addEventListener("click", async () => {
+    const path = button.getAttribute("data-path");
     await request("GET", path);
   });
 });

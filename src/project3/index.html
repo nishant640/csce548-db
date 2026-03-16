@@ -3,22 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CSCE 548 Project 3 Client</title>
+  <title>CSCE 548 Vulnerability Tracker Client</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-  <header class="top">
+  <header class="hero">
     <div class="wrap">
-      <h1>Project 3 Client</h1>
-      <p class="muted">FastAPI client for Users, Systems, Vulnerabilities, and Scans</p>
+      <p class="eyebrow">CSCE 548 Project 3</p>
+      <h1>Vulnerability Tracker Client</h1>
+      <p class="hero-text">
+        This client lets users view and manage records for Users, Systems,
+        Vulnerabilities, and Scans through a simple web interface.
+      </p>
     </div>
   </header>
 
   <main class="wrap">
-
-    <section class="card">
-      <h2>API</h2>
+    <section class="card api-card">
+      <div class="section-head">
+        <div>
+          <h2>API Connection</h2>
+          <p class="muted">Connect this page to the FastAPI service.</p>
+        </div>
+      </div>
 
       <div class="row">
         <label for="baseUrl">Base URL</label>
@@ -26,89 +33,137 @@
       </div>
 
       <div class="row buttons">
-        <button id="pingBtn" type="button">Ping API</button>
+        <button id="pingBtn" type="button">Check API Status</button>
       </div>
 
-      <p id="status" class="muted small">Not pinged yet.</p>
+      <p id="status" class="status-text muted">Not checked yet.</p>
     </section>
 
     <section class="card">
-      <h2>Quick GET Buttons</h2>
-      <p class="muted small">Use these buttons to quickly view all records, a single record, or a smaller subset of records.</p>
+      <div class="section-head">
+        <div>
+          <h2>Quick View Options</h2>
+          <p class="muted">
+            Use these buttons to quickly view all records, one record, or a smaller subset.
+          </p>
+        </div>
+      </div>
 
-      <div class="grid">
-
-        <div class="mini">
+      <div class="entity-grid">
+        <div class="entity-card">
           <h3>Users</h3>
-          <button class="ghost" data-path="/users">View All Users</button>
-          <button class="ghost" data-path="/users/1">View User with ID 1</button>
-          <button class="ghost" data-path="/users?limit=2">View 2 Users</button>
+          <p class="muted small">View user account records.</p>
+          <div class="entity-buttons">
+            <button class="soft-btn" data-path="/users">View All Users</button>
+            <button class="soft-btn" data-path="/users/1">View User with ID 1</button>
+            <button class="soft-btn" data-path="/users?limit=2">View 2 Users</button>
+          </div>
         </div>
 
-        <div class="mini">
+        <div class="entity-card">
           <h3>Systems</h3>
-          <button class="ghost" data-path="/systems">View All Systems</button>
-          <button class="ghost" data-path="/systems/1">View System with ID 1</button>
-          <button class="ghost" data-path="/systems?limit=2">View 2 Systems</button>
+          <p class="muted small">View tracked systems and devices.</p>
+          <div class="entity-buttons">
+            <button class="soft-btn" data-path="/systems">View All Systems</button>
+            <button class="soft-btn" data-path="/systems/1">View System with ID 1</button>
+            <button class="soft-btn" data-path="/systems?limit=2">View 2 Systems</button>
+          </div>
         </div>
 
-        <div class="mini">
+        <div class="entity-card">
           <h3>Vulnerabilities</h3>
-          <button class="ghost" data-path="/vulnerabilities">View All Vulnerabilities</button>
-          <button class="ghost" data-path="/vulnerabilities/1">View Vulnerability with ID 1</button>
-          <button class="ghost" data-path="/vulnerabilities?limit=2">View 2 Vulnerabilities</button>
+          <p class="muted small">View vulnerability records and severity data.</p>
+          <div class="entity-buttons">
+            <button class="soft-btn" data-path="/vulnerabilities">View All Vulnerabilities</button>
+            <button class="soft-btn" data-path="/vulnerabilities/1">View Vulnerability with ID 1</button>
+            <button class="soft-btn" data-path="/vulnerabilities?limit=2">View 2 Vulnerabilities</button>
+          </div>
         </div>
 
-        <div class="mini">
+        <div class="entity-card">
           <h3>Scans</h3>
-          <button class="ghost" data-path="/scans">View All Scans</button>
-          <button class="ghost" data-path="/scans/1">View Scan with ID 1</button>
-          <button class="ghost" data-path="/scans?limit=2">View 2 Scans</button>
+          <p class="muted small">View scan activity and scan results.</p>
+          <div class="entity-buttons">
+            <button class="soft-btn" data-path="/scans">View All Scans</button>
+            <button class="soft-btn" data-path="/scans/1">View Scan with ID 1</button>
+            <button class="soft-btn" data-path="/scans?limit=2">View 2 Scans</button>
+          </div>
         </div>
-
       </div>
     </section>
 
     <section class="card">
-      <h2>Request Builder (CRUD)</h2>
-      <p class="muted small">Use this section to send GET, POST, PUT, and DELETE requests to the API.</p>
+      <div class="section-head">
+        <div>
+          <h2>Create, Update, or Delete Records</h2>
+          <p class="muted">
+            Use the request form below to send GET, POST, PUT, or DELETE requests.
+          </p>
+        </div>
+      </div>
 
-      <div class="row">
-        <label for="method">Method</label>
-        <select id="method">
-          <option>GET</option>
-          <option>POST</option>
-          <option>PUT</option>
-          <option>DELETE</option>
-        </select>
+      <div class="form-grid">
+        <div class="row">
+          <label for="method">Method</label>
+          <select id="method">
+            <option>GET</option>
+            <option>POST</option>
+            <option>PUT</option>
+            <option>DELETE</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label for="path">Path</label>
+          <input id="path" type="text" placeholder="/users" />
+        </div>
       </div>
 
       <div class="row">
-        <label for="path">Path</label>
-        <input id="path" type="text" placeholder="/users" />
-      </div>
-
-      <div class="row">
-        <label for="body">JSON Body (for POST or PUT)</label>
-        <textarea id="body" rows="7" placeholder='{"name":"Test","email":"test@test.com"}'></textarea>
+        <label for="body">JSON Body (used for POST and PUT)</label>
+        <textarea id="body" rows="8" placeholder='{"name":"Test User","email":"test@test.com"}'></textarea>
       </div>
 
       <div class="row buttons">
         <button id="sendBtn" type="button">Send Request</button>
       </div>
+
+      <div class="helper-box">
+        <strong>Example requests:</strong>
+        <ul>
+          <li><code>POST /users</code> with <code>{"name":"John","email":"john@test.com"}</code></li>
+          <li><code>PUT /users/1</code> with <code>{"name":"John Updated","email":"john@test.com"}</code></li>
+          <li><code>DELETE /users/1</code></li>
+        </ul>
+      </div>
     </section>
 
     <section class="card">
-      <h2>Formatted Results</h2>
-      <p class="muted small">Results are shown below in a more readable format for users.</p>
-      <div id="prettyOutput" class="pretty-output">No results yet.</div>
+      <div class="section-head">
+        <div>
+          <h2>Readable Results</h2>
+          <p class="muted">
+            Results are displayed below in a cleaner format instead of only raw JSON.
+          </p>
+        </div>
+      </div>
+
+      <div id="prettyOutput" class="pretty-output">
+        <div class="empty-state">
+          Select a button above or send a request to view results here.
+        </div>
+      </div>
     </section>
 
     <section class="card">
-      <h2>Raw JSON Response</h2>
+      <div class="section-head">
+        <div>
+          <h2>Raw JSON Response</h2>
+          <p class="muted">This section is kept for technical reference.</p>
+        </div>
+      </div>
       <pre id="output" class="output">{}</pre>
     </section>
-
   </main>
 
   <script src="app.js"></script>
