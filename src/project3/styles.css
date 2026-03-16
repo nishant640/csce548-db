@@ -5,13 +5,16 @@
   --muted:#666;
   --line:#e5e7ef;
   --accent:#0b63d9;
+  --accent-soft:#eef3ff;
 }
 
-*{ box-sizing:border-box; }
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family:Arial, Helvetica, sans-serif;
   background:var(--bg);
   color:var(--text);
 }
@@ -30,6 +33,10 @@ body{
 h1{
   margin:0;
   font-size:22px;
+}
+
+h2{
+  margin-top:0;
 }
 
 .card{
@@ -57,12 +64,17 @@ input, select, textarea{
   border-radius:8px;
   padding:10px;
   font-size:14px;
+  width:100%;
+}
+
+textarea{
+  resize:vertical;
 }
 
 button{
   border:0;
   border-radius:8px;
-  padding:8px 12px;
+  padding:10px 14px;
   cursor:pointer;
   background:var(--accent);
   color:white;
@@ -70,7 +82,7 @@ button{
 }
 
 button.ghost{
-  background:#eef3ff;
+  background:var(--accent-soft);
   color:#123d8b;
 }
 
@@ -84,6 +96,9 @@ button.ghost{
   border:1px solid var(--line);
   padding:12px;
   border-radius:10px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
 
 .output{
@@ -93,7 +108,82 @@ button.ghost{
   border-radius:10px;
   min-height:180px;
   overflow:auto;
+  white-space:pre-wrap;
 }
 
-.muted{ color:var(--muted); }
-.small{ font-size:12px; }
+.pretty-output{
+  background:#fafbff;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:16px;
+  min-height:120px;
+}
+
+.result-card{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:12px;
+  margin-bottom:12px;
+  background:white;
+}
+
+.result-card h3{
+  margin-top:0;
+  margin-bottom:10px;
+}
+
+.result-list{
+  margin:0;
+  padding-left:18px;
+}
+
+.result-list li{
+  margin:6px 0;
+}
+
+.result-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+
+.result-table th,
+.result-table td{
+  border:1px solid var(--line);
+  padding:10px;
+  text-align:left;
+  vertical-align:top;
+  font-size:14px;
+}
+
+.result-table th{
+  background:#f1f5ff;
+}
+
+.success{
+  color:#0f7b32;
+  font-weight:600;
+}
+
+.error{
+  color:#b42318;
+  font-weight:600;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.small{
+  font-size:12px;
+}
+
+@media (max-width: 800px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .buttons{
+    flex-direction:column;
+  }
+}

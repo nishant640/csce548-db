@@ -11,7 +11,7 @@
   <header class="top">
     <div class="wrap">
       <h1>Project 3 Client</h1>
-      <p class="muted">FastAPI client for Users, Systems, Vulnerabilities, Scans</p>
+      <p class="muted">FastAPI client for Users, Systems, Vulnerabilities, and Scans</p>
     </div>
   </header>
 
@@ -26,7 +26,7 @@
       </div>
 
       <div class="row buttons">
-        <button id="pingBtn" type="button">Ping</button>
+        <button id="pingBtn" type="button">Ping API</button>
       </div>
 
       <p id="status" class="muted small">Not pinged yet.</p>
@@ -34,43 +34,44 @@
 
     <section class="card">
       <h2>Quick GET Buttons</h2>
-      <p class="muted small">These prove the “get all / get one / get subset” requirement fast.</p>
+      <p class="muted small">Use these buttons to quickly view all records, a single record, or a smaller subset of records.</p>
 
       <div class="grid">
 
         <div class="mini">
           <h3>Users</h3>
-          <button class="ghost" data-path="/users">GET all</button>
-          <button class="ghost" data-path="/users/1">GET one (id=1)</button>
-          <button class="ghost" data-path="/users?limit=2">GET subset (limit=2)</button>
+          <button class="ghost" data-path="/users">View All Users</button>
+          <button class="ghost" data-path="/users/1">View User with ID 1</button>
+          <button class="ghost" data-path="/users?limit=2">View 2 Users</button>
         </div>
 
         <div class="mini">
           <h3>Systems</h3>
-          <button class="ghost" data-path="/systems">GET all</button>
-          <button class="ghost" data-path="/systems/1">GET one (id=1)</button>
-          <button class="ghost" data-path="/systems?limit=2">GET subset (limit=2)</button>
+          <button class="ghost" data-path="/systems">View All Systems</button>
+          <button class="ghost" data-path="/systems/1">View System with ID 1</button>
+          <button class="ghost" data-path="/systems?limit=2">View 2 Systems</button>
         </div>
 
         <div class="mini">
           <h3>Vulnerabilities</h3>
-          <button class="ghost" data-path="/vulnerabilities">GET all</button>
-          <button class="ghost" data-path="/vulnerabilities/1">GET one (id=1)</button>
-          <button class="ghost" data-path="/vulnerabilities?limit=2">GET subset (limit=2)</button>
+          <button class="ghost" data-path="/vulnerabilities">View All Vulnerabilities</button>
+          <button class="ghost" data-path="/vulnerabilities/1">View Vulnerability with ID 1</button>
+          <button class="ghost" data-path="/vulnerabilities?limit=2">View 2 Vulnerabilities</button>
         </div>
 
         <div class="mini">
           <h3>Scans</h3>
-          <button class="ghost" data-path="/scans">GET all</button>
-          <button class="ghost" data-path="/scans/1">GET one (id=1)</button>
-          <button class="ghost" data-path="/scans?limit=2">GET subset (limit=2)</button>
+          <button class="ghost" data-path="/scans">View All Scans</button>
+          <button class="ghost" data-path="/scans/1">View Scan with ID 1</button>
+          <button class="ghost" data-path="/scans?limit=2">View 2 Scans</button>
         </div>
 
       </div>
     </section>
 
     <section class="card">
-      <h2>Full Request Builder (CRUD)</h2>
+      <h2>Request Builder (CRUD)</h2>
+      <p class="muted small">Use this section to send GET, POST, PUT, and DELETE requests to the API.</p>
 
       <div class="row">
         <label for="method">Method</label>
@@ -88,23 +89,28 @@
       </div>
 
       <div class="row">
-        <label for="body">JSON Body (POST/PUT)</label>
+        <label for="body">JSON Body (for POST or PUT)</label>
         <textarea id="body" rows="7" placeholder='{"name":"Test","email":"test@test.com"}'></textarea>
       </div>
 
       <div class="row buttons">
-        <button id="sendBtn" type="button">Send</button>
+        <button id="sendBtn" type="button">Send Request</button>
       </div>
     </section>
 
     <section class="card">
-      <h2>Response</h2>
+      <h2>Formatted Results</h2>
+      <p class="muted small">Results are shown below in a more readable format for users.</p>
+      <div id="prettyOutput" class="pretty-output">No results yet.</div>
+    </section>
+
+    <section class="card">
+      <h2>Raw JSON Response</h2>
       <pre id="output" class="output">{}</pre>
     </section>
 
   </main>
 
   <script src="app.js"></script>
-  
 </body>
 </html>
