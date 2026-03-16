@@ -17,6 +17,7 @@ HOSTING (example):
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 
@@ -32,6 +33,14 @@ from src.business.business import (
 )
 
 app = FastAPI(title="CSCE 548 Project 2 Services")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ---- CORS (needed for Project 3 frontend on port 5500) ----
 app.add_middleware(
