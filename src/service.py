@@ -17,7 +17,6 @@ HOSTING (example):
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 
@@ -34,18 +33,15 @@ from src.business.business import (
 
 app = FastAPI(title="CSCE 548 Project 2 Services")
 
+# CORS for Project 3 frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# ---- CORS (needed for Project 3 frontend on port 5500) ----
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500", "http://localhost:5500"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -65,7 +61,7 @@ class SystemIn(BaseModel):
 class VulnerabilityIn(BaseModel):
     title: str
     severity: str
-    description: str | None = None
+    description: Optional[str] = None
 
 class ScanIn(BaseModel):
     system_id: int
@@ -211,4 +207,4 @@ def api_delete_scan(scan_id: int):
     ok = remove_scan(scan_id)
     if not ok:
         raise HTTPException(status_code=404, detail="Scan not found")
-        return {"deleted": True}
+    return {"deleted": True}
